@@ -3,54 +3,67 @@
 #include <stdio.h>
 #define N 255
 
-typedef struct Aluno{
+typedef struct Aluno {
     char nome[20];
     char email[30];
     int matricula;
-} *hashAluno[N];
+} Aluno;
 
-void print(struct Aluno);
-int toInt(struct Aluno);//Converter o nome do aluno em
-int h(struct Aluno);
-int add(hashAluno hash, struct Aluno A);
+typedef Aluno * HashAluno[N];
 
-int main(){
-    hashAluno hash;
+void print(Aluno A);
+int toInt(Aluno A);
+int h(Aluno A);
+int add(HashAluno hash, Aluno A);
+
+int main() {
+    HashAluno hash;
+    Aluno novoAluno;
     int i;
-    for(i=0; i<N; i++){
-        hash[i] = (struct Aluno*)calloc(sizeof(struct Aluno));
+    
+    for (i = 0; i < N; i++) {
+        hash[i] = NULL;
     }
-    strcpy((*hash[0]).nome, "Kennedy2");
-    strcpy(hash[0]->email, "kennedy.lopes@ufersa.edu.br");
-    hash[0]->matricula = 1;
-    print(*hash[0]);
-    toInt(*hash[0]);
-    add(hash, *hash[0]);
+ 
+    strcpy(novoAluno.nome, "Levitico");
+    strcpy(novoAluno.email, "levitico@.com");
+    novoAluno.matricula = 1;
+    
+    print(novoAluno);
+    i = h(novoAluno);
+    add(hash, novoAluno);
+    print(*hash[i]);
+
+    return 0;
 }
 
-void print(struct Aluno A){
+void print(Aluno A) {
     printf("Aluno: %s\n", A.nome);
     printf("Email: %s\n", A.email);
     printf("Matricula: %d\n", A.matricula);
-    int x = h(A);
 }
 
-int toInt(struct Aluno A){
+int toInt(Aluno A) {
     char* r = A.nome;
     int s = 0, i = 0;
-    while (r[i] != '\0'){
+    while (r[i] != '\0') {
         s += r[i++];
     }
     return s;
 }
 
-int h(struct Aluno A){
+int h(Aluno A) {
     return toInt(A) % N;
 }
 
-int add(hashAluno hash, struct Aluno A){
+int add(HashAluno hash, Aluno A) {
     int x = h(A);
-    if(hash[x] == 0){
+    if (hash[x] == NULL) {
+        hash[x] = (Aluno*)malloc(sizeof(Aluno));
+        if (hash[x] == NULL) {
+            printf("Erro ao alocar memória.\n");
+            return 0;
+        }
         *hash[x] = A;
         return 1;
     }
